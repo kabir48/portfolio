@@ -36,7 +36,8 @@ const CategoryController = require('../controllers/CategoryController.js');
 const FeatureController=require("../controllers/FeatureController.js");
 const SiteSettingController=require('../controllers/SiteSettingController.js');
 const ResumeController=require('../controllers/ResumeController.js');
-const ContactController=require('../controllers/ContactController.js')
+const ContactController=require('../controllers/ContactController.js');
+const TestimonialController=require('../controllers/TestimonialController.js')
 
 //=====middlware part=====//
 const AuthMiddleware=require('../middleware/AuthMiddleware.js');
@@ -86,12 +87,20 @@ const resumeRouter=express.Router();
 
 const contactRouter = express.Router();
     contactRouter.get('/contact-lists',AuthMiddleware,ContactController.contactLists);
-    contactRouter.get('/contact-status/:id',AuthMiddleware,ContactController.changeStatus);
-    contactRouter.get('/contact-delete/:id',AuthMiddleware,ContactController.deleteContact)
-// =======For The Front Design Starts  from here=====//
+    contactRouter.get('/contact-status/:id',AuthMiddleware,ContactController.changeContactStatus);
+    contactRouter.delete('/contact-delete/:id',AuthMiddleware,ContactController.deleteContact)
+
+const testimonialRouter=express.Router();
+    testimonialRouter.get('/testimonial-lists',AuthMiddleware,TestimonialController.readTestimonial)
+    testimonialRouter.post('/testimonial-store',AuthMiddleware,TestimonialController.createTestimonial)
+    testimonialRouter.put('/testimonial-update/:id',AuthMiddleware,TestimonialController.updateTestimonial)
+    testimonialRouter.get('/testimonial-status/:id',AuthMiddleware,TestimonialController.changeTestimonialStatus)
+        
+  // =======For The Front Design Starts  from here=====//
   userRouter.get('/about-me-lists',UserController.profileView);    
   resumeRouter.get('/resume-lists',ResumeController.resumeLists);
   contactRouter.post('/contact-store',ContactController.createContact);
+  testimonialRouter.get('/testimonial-all',TestimonialController.readTestimonial)
  
 
 router.use('/category', categoryRouter);
@@ -100,4 +109,5 @@ router.use('/user', userRouter);
 router.use('/setting', siteSettingRouter);
 router.use('/resume', resumeRouter);
 router.use('/contact', contactRouter);
+router.use('/testimonial', testimonialRouter);
 module.exports = router;
